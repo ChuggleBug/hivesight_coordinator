@@ -1,12 +1,13 @@
 IMAGE_NAME=hvcoord_image
 CONTAINER_NAME=hvcood_container
 
-all: run
+MOSQUITTO_HOST_PORT=1883
 
 run: clean image
-	docker run -d --name $(CONTAINER_NAME) \
+	docker run --privileged -d --name $(CONTAINER_NAME) \
 	  	-v ./frontend:/workspace/frontend \
   		-v ./backend:/workspace/backend \
+		-p $(MOSQUITTO_HOST_PORT):1883 \
 		$(IMAGE_NAME)
 	docker exec -it $(CONTAINER_NAME) /bin/bash
 
