@@ -1,11 +1,9 @@
 import './App.css'
-
 import Login from './pages/Login.jsx'
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import AppHeader from './components/AppHeader';
+import AppHeader from './components/header';
 
 function App() {
-
   return (
     <Router>
       <div className="flex flex-col h-screen w-screen">
@@ -19,5 +17,6 @@ function App() {
     </Router>
   );
 }
+
 
 export default App

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
+import Sidebar from "./Sidebar";
 
 export default function AppHeader() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setUsername(localStorage.getItem('user'));
@@ -24,6 +26,9 @@ export default function AppHeader() {
           </button>
         </div>
       )}
+
+      {/* Sidebar rendered at root level */}
+      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
     </div>
   );
 }
