@@ -1,7 +1,9 @@
 import './App.css'
-import Login from './pages/Login.jsx'
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import Login from './pages/Login'
 import AppHeader from './components/header';
+import VideoFeed from './pages/VideoFeed';
+import DeviceConfig from './pages/DeviceConfig';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 function App() {
   return (
@@ -10,6 +12,8 @@ function App() {
         <AppHeader />
         <div className="flex-1 pt-15">
           <Routes>
+            <Route path="/" element={<VideoFeed />} />
+            <Route path="/config" element={<DeviceConfig />} />
             <Route path="/login" element={<Login />} />
           </Routes>
         </div>

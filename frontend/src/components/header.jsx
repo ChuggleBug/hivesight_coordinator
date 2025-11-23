@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaRegUser } from "react-icons/fa";
+import { RxHamburgerMenu } from "react-icons/rx";
 import Sidebar from "./Sidebar";
 
 export default function AppHeader() {
@@ -18,15 +18,18 @@ export default function AppHeader() {
         <p className="hvs-text">HiveSight</p>
       </button>
 
-      {Boolean(localStorage.getItem('token')) && (
-        <div className="flex items-center gap-2">
-          <p className="hvs-text">Welcome, {username}</p>
-          <button onClick={() => setSidebarOpen(true)}>
-            <FaRegUser color="var(--color-hvs-white)" size={20} />
-          </button>
-        </div>
-      )}
+      <div>
+        <button 
+          className="flex items-center gap-2 pt-1"
+          onClick={() => setSidebarOpen(true)}>
+        {Boolean(localStorage.getItem('token')) && (
+        <p className="hvs-text">Welcome, {username}</p>
 
+        )}
+          <RxHamburgerMenu color="var(--color-hvs-white)" size={20} />
+        </button>
+      </div>
+      
       {/* Sidebar rendered at root level */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
     </div>
