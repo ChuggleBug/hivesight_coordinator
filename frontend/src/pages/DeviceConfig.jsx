@@ -66,7 +66,7 @@ export default function DeviceConfig() {
     };
 
     const DeviceAssoc = () => (
-        <div className="px-10 md:px-20">
+        <div className="md:px-20">
             {loading ? (
                 <div className="flex flex-col w-full hvs-text text-center my-2 p-5 bg-hvs-black-dark rounded-2xl">
                     <h1>Loading...</h1>
