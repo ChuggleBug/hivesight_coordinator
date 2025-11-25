@@ -1,29 +1,31 @@
 
-from fastapi import FastAPI, Body, status, HTTPException
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from .connect import client as mqtt_client
-from .config import settings
-from .mapping import NetworkDevices
+from paho.mqtt.enums import MQTTErrorCode
+from .client.connect import client as mqtt_client
+from .models.config import settings
+
+from .routes.user import router as user_routes
+from .routes.device import router as device_routes
+import time
 
 # Init Services
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,  # Set to True if you need to allow cookies/authorization headers
+    allow_methods=["*"],     # This allows all HTTP methods
+    allow_headers=["*"],     # This allows all headers
+)
+
 print(f"Connecting to mqtt broker on {settings.broker_hostname}:{settings.broker_port}")
-mqtt_client.loop_start()
 
-@app.put("/api/config/assoc")
-def config_device_assoc(assoc: dict[str, list[str]] = Body(...)):
-    print("Updating sensor mappings")
-    if NetworkDevices.set_sensor_mappings(assoc):
-       return
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Trying to create associations to devices that don't exist")
-    
-    
-@app.post("/api/devices")
-def get_devices():
-    return {
-        "sensors": NetworkDevices.get_sensor_devices(),
-        "cameras": NetworkDevices.get_camera_devices()
-    }
+if mqtt_client.loop_start() != MQTTErrorCode.MQTT_ERR_SUCCESS:
+    print(f"Failed to connect to broker. Retrying...")
+    time.sleep(1)
 
-
+app.include_router(user_routes, prefix="/api/user")
+app.include_router(device_routes, prefix="/api/device")
