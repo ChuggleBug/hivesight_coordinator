@@ -4,6 +4,9 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     broker_hostname: str
     broker_port: int
+    cloud_hostname: str
+    cloud_port: int
+    
     
     class Config:
         env_file = ".env"
