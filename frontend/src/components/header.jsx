@@ -5,11 +5,25 @@ import Sidebar from "./Sidebar";
 
 export default function AppHeader() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(localStorage.getItem("user"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    setUsername(localStorage.getItem('user'));
+    const syncLocalState = () => {
+      setUsername(localStorage.getItem("user"));
+      setToken(localStorage.getItem("token"));
+    };
+
+    // Listen for our custom event
+    window.addEventListener("local-storage-changed", syncLocalState);
+
+    // Run once initially
+    syncLocalState();
+
+    return () => {
+      window.removeEventListener("local-storage-changed", syncLocalState);
+    };
   }, []);
 
   return (
@@ -18,19 +32,17 @@ export default function AppHeader() {
         <p className="hvs-text">HiveSight</p>
       </button>
 
-      <div>
-        <button 
-          className="flex items-center gap-2 pt-1"
-          onClick={() => setSidebarOpen(true)}>
-        {Boolean(localStorage.getItem('token')) && (
-        <p className="hvs-text">Welcome, {username}</p>
-
+      <div className="flex items-center gap-2 pt-1">
+        {token ? (
+          <p className="hvs-text cursor-default">Welcome, {username}</p>
+        ) : (
+          <p className="hvs-text cursor-default">Not logged in</p>
         )}
+        <button onClick={() => setSidebarOpen(true)}>
           <RxHamburgerMenu color="var(--color-hvs-white)" size={20} />
         </button>
       </div>
-      
-      {/* Sidebar rendered at root level */}
+
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
     </div>
   );
