@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import apiFetchCloud from "../util/apiFetch";
+import apiFetchCloud, { apiFetchCoordinator } from "../util/apiFetch";
 
 function Login() {
     const [error, setError] = useState("");
@@ -12,7 +12,7 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        const response = await apiFetchCloud("/api/user/login", {
+        const response = await apiFetchCoordinator("/api/user/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -72,10 +72,7 @@ function Login() {
                         value={password}
                         required
                     />
-                    <div className="flex justify-between w-full">
-                        <button className="hvs_btn" type="button" onClick={() => navigate('/signup')}>
-                            <p className="hvs-text">Sign up</p>
-                        </button>
+                    <div className="flex justify-end w-full">
                         <button className="hvs_btn" type="submit">
                             <p className="hvs-text">Login</p>
                         </button>

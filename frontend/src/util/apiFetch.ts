@@ -5,5 +5,5 @@ export default function apiFetchCloud(input: string | URL | globalThis.Request, 
 }
 
 export function apiFetchCoordinator(input: string | URL | globalThis.Request, init?: RequestInit) {
-    return fetch(`http://localhost:8000${input}`, init);
+    return fetch(`http://localhost:3030${input}`, init);
 }
