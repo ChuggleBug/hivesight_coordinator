@@ -1,11 +1,14 @@
-import React, { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { apiFetchCoordinator } from "../util/apiFetch";
 
 export default function Sidebar({ open, setOpen }) {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
+    const response = apiFetchCoordinator("/api/user/logout", {
+      "method": "POST"
+    });
     localStorage.clear();
     navigate('/');
     window.location.reload();
@@ -30,14 +33,14 @@ export default function Sidebar({ open, setOpen }) {
         <div className="flex flex-col py-2 space-y-3 p-4">
 
           <button
-            className="w-full bg-hvs-black hover:bg-hvs-black-dark hover:shadow-2xl py-2 rounded"
+            className="w-full bg-hvs-black hover:bg-hvs-black-dark hover:shadow-2xl py-2 rounded cursor-pointer"
             onClick={() => {navigate('/'); setOpen(false);}}
           >
             <p className="hvs-text">Video Feed</p>
           </button>
 
           <button
-            className="w-full bg-hvs-black hover:bg-hvs-black-dark hover:shadow-2xl py-2 rounded"
+            className="w-full bg-hvs-black hover:bg-hvs-black-dark hover:shadow-2xl py-2 rounded cursor-pointer"
             onClick={() => {navigate('/config'); setOpen(false);}}
           >
             <p className="hvs-text">Configurations</p>
@@ -46,14 +49,14 @@ export default function Sidebar({ open, setOpen }) {
           {/* Login and Logout */}
           {Boolean(localStorage.getItem('token')) ?
             <button
-              className="w-full bg-hvs-black hover:bg-hvs-black-dark hover:shadow-2xl py-2 rounded"
+              className="w-full bg-hvs-black hover:bg-hvs-black-dark hover:shadow-2xl py-2 rounded cursor-pointer"
               onClick={handleLogout}
             >
               <p className="hvs-text">Logout</p>
             </button>
             :
             <button
-              className="w-full bg-hvs-black hover:bg-hvs-black-dark hover:shadow-2xl py-2 rounded"
+              className="w-full bg-hvs-black hover:bg-hvs-black-dark hover:shadow-2xl py-2 rounded cursor-pointer"
               onClick={() => {navigate('/login'); setOpen(false);}}
             >
               <p className="hvs-text">Login</p>
