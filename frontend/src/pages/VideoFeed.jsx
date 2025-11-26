@@ -3,7 +3,7 @@
 export default function VideoFeed() {
     return (
         <div>
-            hello
+            <h1>Video Feed Page</h1>
         </div>
     );
 }
