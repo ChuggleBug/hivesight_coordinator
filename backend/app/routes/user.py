@@ -25,6 +25,9 @@ def config_device_assoc(
 ):
     print(f"Updating sensor mappings: {assoc}")
     if NetworkDevices.set_sensor_mappings(assoc):
+        # Notify all known cameras to update their mappings
+        for camera in NetworkDevices.get_camera_devices():
+            NetworkDevices.message_mappings_to_camera(camera)
         return status.HTTP_204_NO_CONTENT
 
     raise HTTPException(
