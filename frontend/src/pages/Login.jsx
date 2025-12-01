@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import apiFetchCloud, { apiFetchCoordinator } from "../util/apiFetch";
+import { apiFetchCoordinator } from "../util/apiFetch";
 
 function Login() {
     const [error, setError] = useState("");
@@ -27,9 +27,11 @@ function Login() {
         setPassword('')
 
         const data = await response.json();
+        console.log(data)
         if (!response.ok) {
-            setError(data.error)
-            return;
+            // Coordinator backend wraps errors in "details"
+            setError(data.detail)
+            return
         }
 
         localStorage.setItem('token', data.token);
