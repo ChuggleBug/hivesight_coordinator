@@ -96,19 +96,20 @@ class NetworkDevices:
 
 
 # Dummy data for testing
-NetworkDevices.add_camera("patio")
-NetworkDevices.add_camera("fence")
-NetworkDevices.add_camera("kitchen")
+NetworkDevices.add_camera("Patio")
+NetworkDevices.add_camera("Fence")
+NetworkDevices.add_camera("Kitchen")
 
-NetworkDevices.add_sensor("button")
-NetworkDevices.add_sensor("door")
+NetworkDevices.add_sensor("Button")
+NetworkDevices.add_sensor("Door")
 
-NetworkDevices.set_sensor_mappings({
-    "button": [
-        "patio",
-        "fence"
+if not NetworkDevices.set_sensor_mappings({
+    "Button": [
+        "Patio",
+        "Fence"
     ],
-    "door": [
-        "kitchen"
+    "Door": [
+        "Kitchen"
     ]
-})
+}):
+    print("Error setting test mappings")
