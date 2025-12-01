@@ -117,11 +117,11 @@ export default function DeviceConfig() {
     }, []);
 
     return (
-        <div className="flex flex-col items-center h-full justify-center p-20 gap-5">
-            <div className="w-full p-10 rounded-2xl bg-hvs-yellow">
+        <div className="flex flex-col items-center h-full justify-center py-5 px-5 md:px-40 gap-5">
+            <div className="w-full p-5 md:p-10 rounded-2xl bg-hvs-yellow">
                 <DeviceAssoc />
             </div>
-            <div className="flex justify-between bg-hvs-yellow p-5 px-15 w-full rounded-2xl">
+            <div className="flex justify-between bg-hvs-yellow p-5 px-5 md:px-15 w-full rounded-2xl">
                 <button className="hvs_btn hvs-text" onClick={handleReset}>
                     Reset
                 </button>
