@@ -1,12 +1,15 @@
 # routes/devices.py
 
-from fastapi import APIRouter, Body, status, HTTPException
+from fastapi import APIRouter, Body, status, HTTPException, File, UploadFile, Query, Request
 from typing import Dict
 from ..models.mapping import NetworkDevices
+from PIL import Image, UnidentifiedImageError
+import io
 
 router = APIRouter(
     tags=["Devices"]
 )
+
 
 @router.put("/register", status_code=status.HTTP_204_NO_CONTENT, summary="Register a device")
 def register_device(
@@ -42,6 +45,20 @@ def register_device(
             NetworkDevices.add_sensor(register_info['name'])
     except KeyError:
         raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Missing required fields"
-            )
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Missing required fields"
+        )
+
+
+@router.put("/stream", status_code=status.HTTP_204_NO_CONTENT, summary="Upload latest image capture")
+async def stream_device(device: str, request: Request):
+    # Read raw bytes from the request body
+    image_bytes = await request.body()
+    try:
+        image = Image.open(io.BytesIO(image_bytes))
+    except UnidentifiedImageError:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="Could not process data bytes into image"
+        )
+    image.save(f"{device}.jpg")
