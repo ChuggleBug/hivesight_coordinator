@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { apiFetchCoordinator } from "../util/apiFetch";
+import { apiFetchCoordinator, COORDINATOR_HOST } from "../util/apiFetch";
 import { MdArrowLeft, MdArrowRight } from "react-icons/md";
 
 
 export default function VideoFeed() {
     const [cameraList, setCameraList] = useState([]);
     const [cameraIndex, setCameraIndex] = useState(-1); // Invalid for now
+    const [b64Frame, setB64Frame] = useState("");
 
     const fetchCameraList = async () => {
         const response = await apiFetchCoordinator("/api/user/devices");
@@ -16,22 +17,28 @@ export default function VideoFeed() {
         }
 
         const data = await response.json();
-        console.log(data.cameras)
         setCameraList(data.cameras);
     };
 
-    const updateVideoFeed = async () => {
-        // console.log(cameraList[cameraIndex]);
-        
-    };
 
     useEffect(() => {
         fetchCameraList();
     }, []);
 
     useEffect(() => {
-        if (cameraIndex !== -1) {
-            updateVideoFeed();
+        if (cameraIndex === -1) {
+            return;
+        }
+
+        const sse = new EventSource(`${COORDINATOR_HOST}/api/user/feed?camera=${cameraList[cameraIndex]}`);
+
+        sse.onmessage = (e) => {
+            setB64Frame(e.data)
+        }
+
+        return () => {
+            setB64Frame("")
+            sse.close();
         }
     }, [cameraIndex]);
 
@@ -69,11 +76,19 @@ export default function VideoFeed() {
 
             </div>
 
-            <div>
+            <div className="flex-1 select-none p-6 w-full flex justify-center">
+                {b64Frame ? (
+                    <img
+                        className="max-h-2xl max-w-2xl object-contain"
+                        src={`data:image/jpeg;base64,${b64Frame}`}
+                    />
+                ) : (
+                    <div className="hvs-text">No image</div>
+                )}
 
             </div>
 
-            
+
         </div>
     );
 }
