@@ -2,11 +2,16 @@
 # Routes to be used by the user
 
 from fastapi import APIRouter, Body, status, HTTPException
+from fastapi.responses import StreamingResponse
 from typing import Dict, List
 from ..models.mapping import NetworkDevices
 import requests
 from ..models.config import settings
 from ..models.userauth import UserAuth
+import base64
+import asyncio
+from typing import Callable
+import json
 
 router = APIRouter(
     tags=["User"]
@@ -124,3 +129,24 @@ def sync_account():
             })
 
     return UserAuth.get_auth()
+
+
+async def camera_sse_generator(camera: str):
+    to_resp = lambda x: f"data: {x}\n\n" # type: ignore
+    while True:
+        image = await NetworkDevices.get_latest_frame(camera)
+        if image is None:
+            yield to_resp("")
+            continue
+        yield to_resp(base64.b64encode(image.getvalue()).decode("UTF-8"))
+        await asyncio.sleep(0)
+
+@router.get("/feed")
+async def get_camera_feed_sse(camera: str):
+    if camera not in NetworkDevices.get_camera_devices():
+        raise HTTPException(status_code=400, detail="Camera does not exist")
+
+    return StreamingResponse(
+        camera_sse_generator(camera),
+        media_type="text/event-stream"
+    )
