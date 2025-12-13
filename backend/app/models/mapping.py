@@ -116,6 +116,7 @@ class NetworkDevices:
         for sensor, cameras in NetworkDevices.get_sensor_mappings().items():
             if device_name in cameras:
                 sensor_list.append(sensor)
+        print(f"messaging mapping/{device_name}")
         mqttClient.publish(f"mapping/{device_name}",
                            json.dumps({device_name: sensor_list}))
 
@@ -190,20 +191,20 @@ class NetworkDevices:
 
 
 # Dummy data for testing
-NetworkDevices.add_camera("Patio")
-NetworkDevices.add_camera("Fence")
-NetworkDevices.add_camera("Kitchen")
+# NetworkDevices.add_camera("Patio")
+# NetworkDevices.add_camera("Fence")
+# NetworkDevices.add_camera("Kitchen")
 
-NetworkDevices.add_sensor("Button")
-NetworkDevices.add_sensor("Door")
+# NetworkDevices.add_sensor("Button")
+# NetworkDevices.add_sensor("Door")
 
-if not NetworkDevices.set_sensor_mappings({
-    "Button": [
-        "Patio",
-        "Fence"
-    ],
-    "Door": [
-        "Kitchen"
-    ]
-}):
-    print("Error setting test mappings")
+# if not NetworkDevices.set_sensor_mappings({
+#     "Button": [
+#         "Patio",
+#         "Fence"
+#     ],
+#     "Door": [
+#         "Kitchen"
+#     ]
+# }):
+#     print("Error setting test mappings")
