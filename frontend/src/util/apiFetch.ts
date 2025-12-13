@@ -1,5 +1,5 @@
 
-export const CLOUD_HOST = "http://localhost:3000"
+export const CLOUD_HOST = "http://ec2-34-238-248-180.compute-1.amazonaws.com"
 export const COORDINATOR_HOST = "http://localhost:3030"
 
 // A wrapper for fetch which handles hostname
